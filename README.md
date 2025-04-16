@@ -1,64 +1,98 @@
-![logo medcloud-03 white copy](https://user-images.githubusercontent.com/46347123/158176045-de9fefb0-35e2-4515-83ff-c132608aa870.png)
+# 🚀 Medcloud DevOps Challenge
 
-About Medcloud:
+Este repositório contém a solução para o desafio técnico da Medcloud, focado em práticas modernas de DevOps, automação com Terraform, CI/CD com CodePipeline, monitoramento com CloudWatch e deploy em ambiente AWS com containers Docker.
 
-We make exams and medical data management more flexible, secure and effective by accelerating the transition from clinics and hospitals to the cloud.
-The RIS and PACS systems have been practically the same for the past 25 years. Interoperability problems, high costs and a lack of understanding about the patient's access to his medical records.
+---
 
-These points defined limits for the doctor-patient relationship and barriers to radiology workflows. We are revolutionizing this through a Care Coordination based solution that improves workflows for providers and integrates doctors and patients for a better experience.
+## 📁 Estrutura do Projeto
 
-Since our foundation, almost 10 years ago, we have prioritized excellence in the management of health data, structuring workflows of health professionals, clinics, laboratories and hospitals for assertive and quality diagnostics.
+```
+.
+├── app/                    # Aplicações em Node.js (todo-api, service-med)
+│   └── service-name/       # Cada microserviço com Dockerfile + buildspec.yml
+├── infra/                  # Infraestrutura com Terraform
+│   ├── dev/                # Workspace de desenvolvimento
+│   └── modules/            # Módulos reutilizáveis (VPC, ECS, ECR, ALB, etc)
+└── README.md
+```
 
-We understand that behind each medical record there is a patient seeking to improve his health and the hope of family members for his well being. After all, we are all patients, and Medcloud's mission is to help you live longer and better. #PatientFirst
+---
 
-# Development challenge
+## ✅ Tecnologias e Ferramentas Utilizadas
 
-Medcloud's challenge for DevOps.
+- **AWS ECS Fargate** – execução serverless de containers
+- **Amazon ECR** – repositório de imagens Docker
+- **AWS CodePipeline + CodeBuild** – CI/CD completo
+- **Application Load Balancer (ALB)** – balanceamento de carga
+- **CloudWatch + SNS** – monitoramento e alertas por e-mail
+- **Terraform** – infraestrutura como código (IaC)
+- **Docker** – empacotamento e distribuição dos serviços
+- **GitHub** – controle de versão e integração via CodePipeline
 
-## Goal
+---
 
-- To develop a full pipeline using AWS tools to deploy a simple Web Application of your choice using tools to monitor it.
+## 🧠 Objetivo do Projeto
 
-## Required
+- Automatizar o deploy de duas aplicações web em containers separados (simulando microserviços)
+- Criar uma infraestrutura escalável, segura e monitorável utilizando apenas ferramentas da AWS
+- Integrar CI/CD com build automatizado, push para o ECR e deploy no ECS
+- Aplicar conceitos de **SRE** (confiabilidade) e **FinOps** (otimização de custo)
+- Utilizar boas práticas de modularização com Terraform
 
-The full pipeline is composed with:
-- Keep the code in a repository;
-- Automate the build process;
-- There's no need to enable test step;
-- Automate deploy;
-- Enable monitoring on the application.
-- You MUST use AWS tools;
-- You MUST use Terraform for IaC on every infrastructure that you'll create on the cloud provider.
+---
 
-## Extra points
+## 📦 Microserviços
 
-- Keep all the project with different stages (production and development environments);
-- Use IAM to maintain your credentials;
-- Best practices provided by AWS;
-- Generate reports for monitoring;
-- Docker on the application;
-- Microservices Architecture;
-- Best practices for FinOps;
-- Use SRE concepts for monitor the application.
+| Serviço       | Descrição                                                   |
+|---------------|-------------------------------------------------------------|
+| `todo-api`    | Aplicação simples de gerenciamento de tarefas               |
+| `service-med` | Microserviço de agendamento médico, simulando o contexto real da Medcloud |
 
-## What will be evaluated
+---
 
-- Usability;
-- Design;
-- Automation;
-- Be consistent and know how to argue your choices;
-- Present solutions you master.
+## 🚨 Monitoramento e Alertas
 
-According to the above criteria, we will evaluate your test in order to proceed to the technical interview.
-If you have not acceptably achieved what we are proposing above, we will not proceed with the process.
+- **CloudWatch Logs**: logs de aplicação centralizados
+- **CloudWatch Alarm**: monitora uso de CPU no ECS
+- **SNS Topic**: envia alertas para o e-mail `mendes.lucasm740@gmail.com` quando a CPU excede 70%
 
-## Delivery
+---
 
-You MUST fork this repository to your own account and push you code to it. 
-When you finish it, you must send a email to cv@medcloud.com.br with your curriculum and your fork.
-Any doubts, feel free to send an email to cv@medcloud.com.br.
+## 📦 CI/CD com CodePipeline
 
-## For the day of the technical interview and code review
+- CodePipeline monitorando o GitHub
+- CodeBuild com `buildspec.yml` que:
+  - Instala dependências
+  - Builda imagem Docker
+  - Faz push da imagem para o ECR
+- ECS atualizado automaticamente via CodePipeline
 
-On the date set by the recruiter, have the project running on your local machine.
-We will do a review together with you as if you were already on our team, you will be able to explain what you thought, how you architected and how the project can evolve. Good luck!
+---
+
+## 📄 Como rodar localmente
+
+```bash
+cd app/todo-api
+npm install
+npm start
+```
+
+---
+
+## 🌐 Como provisionar a infraestrutura
+
+```bash
+cd infra/dev
+terraform init
+terraform workspace new dev
+terraform apply
+```
+
+
+---
+
+## 📬 Contato
+
+Desenvolvido por **Lucas Wellinson Mendes Martins**  
+Email: mendes.lucasm740@gmail.com  
+LinkedIn: [lucas-mendes](https://www.linkedin.com/in/lucas-mendes-a675a7263/)

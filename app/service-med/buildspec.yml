@@ -1,0 +1,38 @@
+version: 0.2
+
+env:
+  variables:
+    IMAGE_REPO_NAME: service-med
+    IMAGE_TAG: latest
+  parameter-store:
+    AWS_ACCOUNT_ID: "/devops/aws_account_id"
+    AWS_REGION: "/devops/aws_region"
+
+phases:
+  install:
+    runtime-versions:
+      docker: 20
+    commands:
+      - echo "Instalando dependências do Node.js"
+      - npm install
+
+  pre_build:
+    commands:
+      - echo "Fazendo login no Amazon ECR..."
+      - aws ecr get-login-password --region $AWS_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com
+
+  build:
+    commands:
+      - echo "Buildando imagem Docker..."
+      - docker build -t $IMAGE_REPO_NAME:$IMAGE_TAG .
+      - docker tag $IMAGE_REPO_NAME:$IMAGE_TAG $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
+
+  post_build:
+    commands:
+      - echo "Enviando imagem para o Amazon ECR..."
+      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/$IMAGE_REPO_NAME:$IMAGE_TAG
+      - echo "Build e push finalizados com sucesso!"
+
+artifacts:
+  files:
+    - '**/*'
